@@ -27,8 +27,9 @@ jobs:
       shell: bash
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       id: extract_branch
+    # the sl analyze command below needs to have app name specified and location of csproj or sln files. In addition, the container is pointing to Qwiets Registry and should be removed or edited for customers info
     - name: Analyze with NextGen Static Analysis
-    run: .\sl analyze --strict --app Qwiet-csharp-GH --tag branch=${{ github.head_ref || steps.extract_branch.outputs.branch }} --csharp --dotnet --cpg netcoreWebapi/netcoreWebapi.csproj
+      run: .\sl analyze --strict --app Qwiet-csharp-GH --tag branch=${{ github.head_ref || steps.extract_branch.outputs.branch }} --csharp --dotnet --cpg netcoreWebapi/netcoreWebapi.csproj
       env:
         SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
         SHIFTLEFT_API_HOST: www.shiftleft.io
@@ -38,7 +39,7 @@ jobs:
     - name: Create status check
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        URL: https://app.shiftleft.io/findingsSummary/Qwiet-csharp-GH?apps=Qwiet-csharp-GH &isApp=1
+        URL: https://app.shiftleft.io/findingsSummary/Qwiet-csharp-GH?apps=Qwiet-csharp-GH&isApp=1
       run: |
         $params = @{
             Uri         = "https://api.github.com/repos/$ENV:GITHUB_REPOSITORY/check-runs"
@@ -47,11 +48,11 @@ jobs:
               'Accept' = 'application/vnd.github.antiope-preview+json'
             }
             Method      = 'POST'
-            Body        = "{`"name`": `"ShiftLeft NextGen Static Analysis`", `"head_sha`": `"$ENV:GITHUB_REF`", `"external_id`": `"shiftleft-csharp-demo`", `"details_url`": `"$ENV:URL`", `"status`": `"completed`", `"conclusion`": `"action_required`", `"output`": {`"title`": `"ShiftLeft NextGen Static Analysis Findings`", `"summary`": `"Visit $ENV:URL for the findings`"}}"
+            Body        = "{`"name`": `"ShiftLeft NextGen Static Analysis`", `"head_sha`": `"$ENV:GITHUB_REF`", `"external_id`": `"Qwiet-csharp-GH`", `"details_url`": `"$ENV:URL`", `"status`": `"completed`", `"conclusion`": `"action_required`", `"output`": {`"title`": `"Qwiet NextGen Static Analysis Findings`", `"summary`": `"Visit $ENV:URL for the findings`"}}"
             ContentType = 'application/json'
         }
         Invoke-RestMethod @params
-
+        
   Build-Rules: 
     runs-on: windows-latest
     needs: NextGen-Static-Analysis
