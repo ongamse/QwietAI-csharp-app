@@ -1,6 +1,6 @@
 # This workflow integrates ShiftLeft NG SAST with GitHub
 # Visit https://docs.shiftleft.io for help
-name: ShiftLeft
+name: Qwiet
 
 on:
   pull_request:
@@ -16,7 +16,7 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 5.0.x
-    - name: Download ShiftLeft CLI
+    - name: Download Qwiet CLI
       run: |
         Invoke-WebRequest -Uri 'https://cdn.shiftleft.io/download/sl-latest-windows-x64.zip' -OutFile sl.zip
         Expand-Archive -Path sl.zip -DestinationPath .
@@ -28,7 +28,7 @@ jobs:
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       id: extract_branch
     - name: Analyze with NextGen Static Analysis
-      run: .\sl analyze --strict --app shiftleft-csharp-demo --tag branch=${{ github.head_ref || steps.extract_branch.outputs.branch }} --csharp --dotnet --cpg netcoreWebapi/netcoreWebapi.csproj
+    run: .\sl analyze --strict --app Qwiet-csharp-GH --tag branch=${{ github.head_ref || steps.extract_branch.outputs.branch }} --csharp --dotnet --cpg netcoreWebapi/netcoreWebapi.csproj
       env:
         SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
         SHIFTLEFT_API_HOST: www.shiftleft.io
@@ -38,7 +38,7 @@ jobs:
     - name: Create status check
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        URL: https://app.shiftleft.io/findingsSummary/shiftleft-csharp-demo?apps=shiftleft-csharp-demo&isApp=1
+        URL: https://app.shiftleft.io/findingsSummary/shiftleft-csharp-demo?apps=Qwiet-csharp-GH&isApp=1
       run: |
         $params = @{
             Uri         = "https://api.github.com/repos/$ENV:GITHUB_REPOSITORY/check-runs"
@@ -57,13 +57,13 @@ jobs:
     needs: NextGen-Static-Analysis
     steps:
     - uses: actions/checkout@v3
-    - name: Download ShiftLeft CLI
+    - name: Download Qwiet CLI
       run: |
         Invoke-WebRequest -Uri 'https://cdn.shiftleft.io/download/sl-latest-windows-x64.zip' -OutFile sl.zip
         Expand-Archive -Path sl.zip -DestinationPath .
     - name: Validate Build Rules
       run: |
-        .\sl check-analysis --app shiftleft-csharp-demo `
+        .\sl check-analysis --app Qwiet-csharp-GH `
             --github-pr-number=${{github.event.number}} `
             --github-pr-user=${{ github.repository_owner }} `
             --github-pr-repo=${{ github.event.repository.name }} `
