@@ -5,7 +5,9 @@ name: Qwiet
 on:
   pull_request:
   workflow_dispatch:
-
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron: '0 12 * * 6'
 jobs:
   NextGen-Static-Analysis:
     runs-on: windows-latest
