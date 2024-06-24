@@ -26,7 +26,7 @@ jobs:
     - name: Build web api
       run: dotnet build netcoreWebapi
     - name: Analyze with NextGen Static Analysis
-      run: .\sl analyze --strict --wait --app Qwiet-csharp-GH --tag branch=${{ github.head_ref }} --csharp --dotnet --cpg netcoreWebapi/netcoreWebapi.csproj
+      run: .\sl analyze --strict --wait --app Qwiet-csharp-GH --tag branch=${{ github.head_ref }}
       env:
         SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKENQ }}
         SHIFTLEFT_API_HOST: www.shiftleft.io
