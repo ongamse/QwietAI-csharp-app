@@ -16,15 +16,15 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 5.0.x
-    - name: Download ShiftLeft CLI
+    - name: Download QwietAI preZero CLI
       run: |
         Invoke-WebRequest -Uri 'https://cdn.shiftleft.io/download/sl-latest-windows-x64.zip' -OutFile sl.zip
         Expand-Archive -Path sl.zip -DestinationPath .
 
     - name: Build web api
       run: dotnet build netcoreWebapi
-    - name: Analyze with NextGen Static Analysis
-      run: .\sl analyze --strict --wait --app QwietAI-csharp-GH --tag branch=${{ github.head_ref }}
+    - name: Analyze with preZero NextGen Static Analysis
+      run: .\sl analyze --strict --wait --app QwietAI-csharp-GH --tag branch=${{ github.head_ref }} ./..
       #--csharp --dotnet --cpg netcoreWebapi/netcoreWebapi.csproj
       env:
         SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
