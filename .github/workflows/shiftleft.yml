@@ -11,11 +11,11 @@ jobs:
   QwietAI-preZero-NextGen-Static-Analysis:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 8.0.x
     - name: Download QwietAI CLI
       run: |
         Invoke-WebRequest -Uri 'https://cdn.shiftleft.io/download/sl-latest-windows-x64.zip' -OutFile sl.zip
